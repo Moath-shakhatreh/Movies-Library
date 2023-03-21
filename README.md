@@ -5,6 +5,7 @@
 
 ## WRRC
 ![plot](./wrrc.jpg)
+![plot](./wrrc-2.jpg)
 
 ## Overview
 
@@ -13,6 +14,9 @@
 2-init -y <br />
 3-create `index.js`<br />
 4-`npm install express`<br />
+5-`npm i cores`<br/>
+6-`npm i nodemon`<br/>
+7-`npm i auxios`<br/>
 <!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
 
 
