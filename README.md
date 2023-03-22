@@ -22,4 +22,7 @@
 
 ## Project Features
 <!-- What are the features included in you app -->
-Library that contain many movies
+This app allow you to check the trending movies <br/>
+search any movie by it's name,
+choose  movie depend on its genre,
+and showing the upComing movies.

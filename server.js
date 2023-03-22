@@ -16,7 +16,7 @@ app.get('/favorite', favoriteHandler);
 app.get('/trending',trendingHandler);
 app.get('/search',searchHandler);
 app.get('/genre',genreHandler);
-app.get('/person',personHandler);
+app.get('/upComingMovie',upComingMovieHandler);
 
 
 
@@ -64,7 +64,7 @@ function trendingHandler (req,res){
 
 function searchHandler (req,res){
         let movieName = req.query.name;
-        let url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&api_key=${apiKey}&language=en-US&query=The&page=2`;
+        let url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${movieName}&The&page=2`;
 //https://api.spoonacular.com/recipes/random?apiKey=${apikey} 
         axios.get(url)
         .then((result)=>{
@@ -97,13 +97,17 @@ function genreHandler (req,res){
     
     } 
 
-    function personHandler (req,res){
+    function upComingMovieHandler (req,res){
         //axios.get(url).then().catch()
-        let url = `https://api.themoviedb.org/3/person/popular?api_key=${apiKey}&language=en-US&page=1`;
+        let url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=en-US&page=1`;
         axios.get(url)
         .then((result)=>{
+
+            let dataUpcomingMovie = result.data.results.map((x)=>{
+                return new Requets(x.original_title,x.overview)
+            })
     
-            res.json(result.data.results);
+            res.json(dataUpcomingMovie);
         })
         .catch((err)=>{
             console.log(err);
