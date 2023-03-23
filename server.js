@@ -4,10 +4,17 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 require('dotenv').config();
+const bodyParser = require('body-parser');
 const movieData = require('./Movie Data/data.json');
+const password = process.env.PASSWORD;
+const { Client } = require('pg')
+let url = `postgres://moath:${password}@localhost:5432/demo`;
+const client = new Client(url);
 const app = express();
 app.use (cors());
 const port = process.env.PORT ;
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 const apiKey = process.env.API_KEY;
 
 
@@ -17,13 +24,32 @@ app.get('/trending',trendingHandler);
 app.get('/search',searchHandler);
 app.get('/genre',genreHandler);
 app.get('/upComingMovie',upComingMovieHandler);
-
-
+app.post('/addMovies',addMovieHandler);
+app.get('/getMovies',getMoviesHandler)
 
 app.get('/error',(req,res)=>res.send(error()));
 
+function  getMoviesHandler (req,res){
+    let sql=`SELECT * FROM movies;`
+    client.query(sql).then((result)=>{
+        res.json(result.rows)
+    }
 
+    ).catch()
+}
 
+function addMovieHandler(req,res){
+    let {title,time,image} = req.body ;
+    let sql = `INSERT INTO movies (title, time, image)
+    VALUES ($1,$2,$3) RETURNING *;`
+    let values = [title,time,image];
+    client.query(sql,values).then((result)=>{
+        res.status(201).json(result.rows)
+
+    }
+    ).catch() 
+}
+ 
  
 function moviesHandler(req,res){
     let result={};
@@ -145,14 +171,18 @@ let e = {
     "status": 404,
 "responseText": "Sorry, something went wrong"
 }
+
 app.use((req, res, next) => {
     res.status(404).send(e)
-  })
+})
 
 
-  app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-  })
+
+client.connect().then(()=>{
+      app.listen(port, () => {
+        console.log(`Example app listening on port ${port}`);
+    })
+}).catch()
 
 
 
