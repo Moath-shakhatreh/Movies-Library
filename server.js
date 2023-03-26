@@ -8,9 +8,10 @@ const bodyParser = require('body-parser');
 const movieData = require('./Movie Data/data.json');
 const password = process.env.PASSWORD;
 const { Client } = require('pg')
-let url = `postgres://moath:${password}@localhost:5432/demo`;
+let url = `postgres://moath:${password}@localhost:5432/movies`;
 const client = new Client(url);
 const app = express();
+
 app.use (cors());
 const port = process.env.PORT ;
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -39,10 +40,10 @@ function  getMoviesHandler (req,res){
 }
 
 function addMovieHandler(req,res){
-    let {title,time,image} = req.body ;
-    let sql = `INSERT INTO movies (title, time, image)
-    VALUES ($1,$2,$3) RETURNING *;`
-    let values = [title,time,image];
+    let {name,comments} = req.body ;
+    let sql = `INSERT INTO movies (name,comments)
+    VALUES ($1,$2) RETURNING *;`
+    let values = [name,comments];
     client.query(sql,values).then((result)=>{
         res.status(201).json(result.rows)
 
