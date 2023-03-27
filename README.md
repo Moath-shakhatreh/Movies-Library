@@ -52,4 +52,5 @@ use client.query() to do CRUD
 This app allow you to check the trending movies <br/>
 search any movie by it's name,
 choose  movie depend on its genre,
-,showing the upComing movies,add movies to the dataBase and showing all the movies in the dataBase.
+,showing the upComing movies,add movies to the dataBase, showing all the movies in the dataBase.
+also you can edit any movie name or comments , delete any movie by it's ID and get any movie also by it's ID.   
