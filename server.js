@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const movieData = require('./Movie Data/data.json');
 const password = process.env.PASSWORD;
 const { Client } = require('pg')
-let url = `postgres://moath:${password}@localhost:5432/movies`;
+let url = `${process.env.DATABASE_URL}`;
 const client = new Client(url);
 const app = express();
 
@@ -43,7 +43,7 @@ function  getMovieHandler (req,res){
     }
 
     ).catch()
-}
+}   
 
 
 function handleUpdate(req,res){
