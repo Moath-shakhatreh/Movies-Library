@@ -25,10 +25,55 @@ app.get('/trending',trendingHandler);
 app.get('/search',searchHandler);
 app.get('/genre',genreHandler);
 app.get('/upComingMovie',upComingMovieHandler);
-app.post('/addMovies',addMovieHandler);
-app.get('/getMovies',getMoviesHandler)
-
+app.post('/addMovies',addMoviesHandler);
+app.get('/getMovies',getMoviesHandler);
+app.put('/updateMovies/:id',handleUpdate);//params
+app.delete('/deleteMovies/:id', handleDelete);
+app.get('/getMovie/:id',getMovieHandler);
 app.get('/error',(req,res)=>res.send(error()));
+
+function  getMovieHandler (req,res){
+    let movieID = req.params.id 
+    let sql=`SELECT *
+    FROM movies
+    WHERE id = $1;`
+    let values = [movieID];
+    client.query(sql,values).then((result)=>{
+        res.json(result.rows)
+    }
+
+    ).catch()
+}
+
+
+function handleUpdate(req,res){
+    // console.log(11111111,req.params);
+    let movieID = req.params.id // params
+    let {name,comments,id} = req.body;
+    let sql=`UPDATE movies SET name = $1, comments = $2, id=$3 
+    WHERE id = $4 RETURNING *;`;
+    let values = [name,comments,id,movieID];
+    client.query(sql,values).then(result=>{
+        console.log(result.rows);
+        res.send(result.rows)
+    }).catch()
+
+}
+
+function handleDelete(req,res){
+    let movieID = req.params.id; 
+    let sql=`DELETE FROM movies WHERE id = $1;` ;
+    let value = [movieID];
+    client.query(sql,value).then(result=>{
+        res.status(204).send("deleted");
+    }).catch()
+
+
+}
+
+
+
+
 
 function  getMoviesHandler (req,res){
     let sql=`SELECT * FROM movies;`
@@ -39,7 +84,7 @@ function  getMoviesHandler (req,res){
     ).catch()
 }
 
-function addMovieHandler(req,res){
+function addMoviesHandler(req,res){
     let {name,comments} = req.body ;
     let sql = `INSERT INTO movies (name,comments)
     VALUES ($1,$2) RETURNING *;`
@@ -87,7 +132,7 @@ function trendingHandler (req,res){
             console.log(err);
         })
     
-    } 
+} 
 
 function searchHandler (req,res){
         let movieName = req.query.name;
